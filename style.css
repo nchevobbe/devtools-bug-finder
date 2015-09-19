@@ -86,6 +86,7 @@ a:hover {
 .tool-audio::before {background: #95E8AE;}
 .tool-shader::before {background: #FFF9AA;}
 .tool-webide::before {background: #E8B795;}
+.tool-jsonviewer::before {background: #ED2655;}
 .tool-tilt::before {background: #FFAAF6;}
 .tool-main::before {background: #2F2DE8;}
 

@@ -62,6 +62,10 @@ var COMPONENT_MAPPING = {
     label: "WebIDE",
     components: ["Developer Tools: WebIDE"]
   },
+  "jsonviewer": {
+    label: "JSON Viewer",
+    components: ["Developer Tools: JSON Viewer"]
+  },
   "tilt": {
     label: "3D View",
     components: ["Developer Tools: 3D View"]
