@@ -102,11 +102,11 @@ a:hover {
 .sidebar {
   float: left;
   margin: 3em;
-  width: 200px;
+  width: 20%;
 }
 
 .main {
-  margin: 3em 3em 0 calc(6em + 200px);
+  margin: 3em 3em 0 calc(6em + 20%);
 }
 
 .footer {
@@ -171,9 +171,19 @@ a:hover {
   font-weight: normal;
 }
 
+@media (max-width: 650px) {
+  .header .links {
+    display: none;
+  }
+}
+
 .header .links li {
   display: inline;
   margin-left: 1em;
+}
+
+.header .links li:first-child {
+  margin-left: 0;
 }
 
 /* Filters list */
@@ -181,6 +191,7 @@ a:hover {
 .filters li {
   padding: .8em;
   box-sizing: border-box;
+  display: flex;
 }
 
 .filters li input {
