@@ -85,7 +85,8 @@ var INCLUDED_FIELDS = ["id",
                        "last_change_time",
                        "component",
                        "whiteboard",
-                       "mentors"];
+                       "mentors",
+                       "attachments"];
 
 var searchString = null;
 var currentBugList = null;
@@ -202,6 +203,12 @@ function timeFromModified(lastChangeTime) {
 
 function isInactive(bug) {
   return timeFromModified(bug.last_change_time) >= INACTIVE_AFTER;
+}
+
+function hasPatch(bug) {
+  return bug.attachments && bug.attachments.some(function(attachment) {
+    return attachment.is_patch;
+  });
 }
 
 function isAssigned(bug) {
@@ -337,6 +344,15 @@ function createBugMarkup(bug) {
         "class": "old-bug",
         "title": "This bug has been inactive for more than " +
                  INACTIVE_AFTER + " days"
+      }
+    }));
+  }
+
+  if (hasPatch(bug)) {
+    el.appendChild(createNode({
+      attributes: {
+        "class": "has-patch",
+        "title": "This bug has an attached patch"
       }
     }));
   }
