@@ -263,6 +263,12 @@ function toggleFirstComment(bugEl) {
   }
 }
 
+function getToolTooltip(id) {
+  return COMPONENT_MAPPING[id].components.map(function(component) {
+    return component.replace("Developer Tools: ", "");
+  }).join(",\n");
+}
+
 function createToolListMarkup(parentEl) {
   var keys = Object.keys(COMPONENT_MAPPING);
   for (var i = 0; i < keys.length; i++) {
@@ -282,7 +288,8 @@ function createToolListMarkup(parentEl) {
       textContent: COMPONENT_MAPPING[keys[i]].label,
       attributes: {
         "for": keys[i],
-        "class": "tool-" + keys[i]
+        "class": "tool-" + keys[i],
+        "title": getToolTooltip(keys[i])
       }
     });
 
