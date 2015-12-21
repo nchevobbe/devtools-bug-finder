@@ -219,7 +219,6 @@ a:hover {
 }
 
 .bug .bug-link {
-  display: block;
   margin-bottom: .5em;
   /* Leave some place for the old-bug indicator */
   margin-right: .8em;

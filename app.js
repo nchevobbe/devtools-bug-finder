@@ -342,11 +342,15 @@ function createBugMarkup(bug) {
     }));
   }
 
-  el.appendChild(createNode({
+  var titleContainer = createNode({
+    attributes: {"class": "bug-link"}
+  });
+  el.appendChild(titleContainer);
+
+  titleContainer.appendChild(createNode({
     tagName: "a",
     textContent: "Bug " + bug.id + " - " + bug.summary,
     attributes: {
-      "class": "bug-link",
       href: BUG_URL + bug.id,
       target: "_blank"
     }
