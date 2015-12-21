@@ -7,7 +7,12 @@ var PRODUCT = "Firefox";
 var COMPONENT_MAPPING = {
   "inspector": {
     label: "Inspector",
-    components: ["Developer Tools: Inspector"]
+    components: ["Developer Tools: Inspector",
+                 "Developer Tools: CSS Rules Inspector",
+                 "Developer Tools: Computed Styles Inspector",
+                 "Developer Tools: Font Inspector",
+                 "Developer Tools: Animation Inspector",
+                 "Developer Tools: Style Editor"]
   },
   "console": {
     label: "Web Console",
@@ -21,10 +26,6 @@ var COMPONENT_MAPPING = {
     label: "Network Monitor",
     components: ["Developer Tools: Netmonitor"]
   },
-  "style": {
-    label: "Style Editor",
-    components: ["Developer Tools: Style Editor"]
-  },
   "perf": {
     label: "Performance Tools",
     components: ["Developer Tools: Memory",
@@ -35,8 +36,9 @@ var COMPONENT_MAPPING = {
     components: ["Developer Tools: Storage Inspector"]
   },
   "canvas": {
-    label: "Canvas Debugger",
-    components: ["Developer Tools: Canvas Debugger"]
+    label: "Canvas & WebGL",
+    components: ["Developer Tools: Canvas Debugger",
+                 "Developer Tools: WebGL Shader Editor"]
   },
   "gcli": {
     label: "Command Line",
@@ -54,10 +56,6 @@ var COMPONENT_MAPPING = {
     label: "Web Audio Editor",
     components: ["Developer Tools: Web Audio Editor"]
   },
-  "shader": {
-    label: "WebGL Shader Editor",
-    components: ["Developer Tools: WebGL Shader Editor"]
-  },
   "webide": {
     label: "WebIDE",
     components: ["Developer Tools: WebIDE"]
@@ -66,15 +64,16 @@ var COMPONENT_MAPPING = {
     label: "JSON Viewer",
     components: ["Developer Tools: JSON Viewer"]
   },
-  "tilt": {
-    label: "3D View",
-    components: ["Developer Tools: 3D View"]
+  "aboutdebugging": {
+    label: "about:debugging",
+    components: ["Developer Tools: about:debugging"]
   },
   "main": {
     label: "Everything Else",
     components: ["Developer Tools", "Developer Tools: Framework",
                  "Developer Tools: Object Inspector",
-                 "Developer Tools: Source Editor"]
+                 "Developer Tools: Source Editor",
+                 "Developer Tools: 3D View"]
   },
 };
 // How many days do we wait until considering an assigned bug as

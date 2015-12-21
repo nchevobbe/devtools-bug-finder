@@ -76,7 +76,6 @@ a:hover {
 .tool-console::before {background: #0070E8;}
 .tool-debugger::before {background: #07FF44;}
 .tool-network::before {background: #E8D300;}
-.tool-style::before {background: #FF6607;}
 .tool-perf::before {background: #846CFF;}
 .tool-storage::before {background: #4DE8DE;}
 .tool-canvas::before {background: #A7FF5C;}
@@ -84,12 +83,10 @@ a:hover {
 .tool-responsive::before {background: #FF665C;}
 .tool-scratchpad::before {background: #BAD7FF;}
 .tool-audio::before {background: #95E8AE;}
-.tool-shader::before {background: #FFF9AA;}
 .tool-webide::before {background: #E8B795;}
 .tool-jsonviewer::before {background: #ED2655;}
-.tool-tilt::before {background: #FFAAF6;}
 .tool-main::before {background: #2F2DE8;}
-
+.tool-aboutdebugging::before {background: #FFF9AA;}
 
 /* General page layout */
 
