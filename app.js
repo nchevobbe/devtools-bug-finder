@@ -68,6 +68,10 @@ var COMPONENT_MAPPING = {
     label: "about:debugging",
     components: ["Developer Tools: about:debugging"]
   },
+  "dom": {
+    label: "DOM",
+    components: ["Developer Tools: DOM"]
+  },
   "main": {
     label: "Everything Else",
     components: ["Developer Tools", "Developer Tools: Framework",

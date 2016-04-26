@@ -87,6 +87,7 @@ a:hover {
 .tool-jsonviewer::before {background: #ED2655;}
 .tool-main::before {background: #2F2DE8;}
 .tool-aboutdebugging::before {background: #FFF9AA;}
+.tool-dom::before {background: #AA2E5F;}
 
 /* General page layout */
 
