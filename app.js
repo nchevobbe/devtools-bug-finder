@@ -68,12 +68,15 @@ var COMPONENT_MAPPING = {
     label: "about:debugging",
     components: ["Developer Tools: about:debugging"]
   },
+  "dom": {
+    label: "DOM",
+    components: ["Developer Tools: DOM"]
+  },
   "main": {
     label: "Everything Else",
     components: ["Developer Tools", "Developer Tools: Framework",
                  "Developer Tools: Object Inspector",
-                 "Developer Tools: Source Editor",
-                 "Developer Tools: 3D View"]
+                 "Developer Tools: Source Editor"]
   },
 };
 // How many days do we wait until considering an assigned bug as
