@@ -76,8 +76,7 @@ var COMPONENT_MAPPING = {
     label: "Everything Else",
     components: ["Developer Tools", "Developer Tools: Framework",
                  "Developer Tools: Object Inspector",
-                 "Developer Tools: Source Editor",
-                 "Developer Tools: 3D View"]
+                 "Developer Tools: Source Editor"]
   },
 };
 // How many days do we wait until considering an assigned bug as
