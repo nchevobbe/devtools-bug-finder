@@ -210,7 +210,8 @@ function createToolListMarkup(parentEl) {
     var input = createNode({
       tagName: "input",
       attributes: {
-        type: "checkbox",
+        name: "tool",
+        type: "radio",
         value: keys[i],
         id: keys[i]
       }
@@ -405,19 +406,6 @@ function search() {
 }
 
 function onInput(e) {
-  // Unselect all other inputs if the "all" input is checked.
-  if (e.target.id === "all" && e.target.checked) {
-    [].forEach.call(document.querySelectorAll(".tools-list input"), function(box) {
-      if (box.id !== "all") {
-        box.checked = false;
-      }
-    });
-  }
-
-  if (e.target.id !== "all" && e.target.type === "checkbox") {
-    document.querySelector("#all").checked = false;
-  }
-
   search();
 }
 
