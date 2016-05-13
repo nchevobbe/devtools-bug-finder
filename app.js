@@ -4,6 +4,7 @@ var BUG_URL = "https://bugzilla.mozilla.org/show_bug.cgi?id=";
 var BUG_STATUS = ["NEW", "REOPENED", "UNCONFIRMED"];
 var WHITEBOARD_TYPE = "contains_all";
 var PRODUCT = "Firefox";
+var GOOD_FIRST_BUG_WHITEBOARD = "good first bug";
 
 // How many days do we wait until considering an assigned bug as
 // unassigned.
@@ -81,6 +82,15 @@ function getComponentParams(componentKeys) {
   return components;
 }
 
+function hasFilter(name, filters) {
+  for (var i = 0; i < filters.length; i ++) {
+    if (filters[i] === name) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function getSearchParams(options) {
   options = options || {};
 
@@ -99,23 +109,13 @@ function getSearchParams(options) {
 
   params.component = getComponentParams(options.components);
 
-  switch (options.type) {
-    case "good-first":
-      // Only search for good-first-bugs (whether mentored or not).
-      params.status_whiteboard.push("good first bug");
-      break;
-    case "all-mentored":
-      // Search for all mentored bugs.
-      params.f1 = "bug_mentor";
-      params.o1 = "isnotempty";
-      break;
-    case "all-polish":
-      // Search for polish-backlog bugs
-      params.status_whiteboard.push("polish-backlog");
-      break;
-    default:
-      // Search for all bugs.
-      break;
+  if (hasFilter("good-first", options.filters)) {
+    params.status_whiteboard.push(GOOD_FIRST_BUG_WHITEBOARD);
+  }
+
+  if (hasFilter("mentored", options.filters)) {
+    params.f1 = "bug_mentor";
+    params.o1 = "isnotempty";
   }
 
   return params;
@@ -132,6 +132,10 @@ function timeFromModified(lastChangeTime) {
 
 function isInactive(bug) {
   return timeFromModified(bug.last_change_time) >= INACTIVE_AFTER;
+}
+
+function isGoodFirst(bug) {
+  return bug.whiteboard.indexOf(GOOD_FIRST_BUG_WHITEBOARD) !== -1;
 }
 
 function hasPatch(bug) {
@@ -247,12 +251,12 @@ function getSelectedTools() {
   });
 }
 
-function getSelectedType() {
-  return [].filter.call(document.querySelectorAll(".type-list input"), function(input) {
+function getSelectedFilters() {
+  return [].filter.call(document.querySelectorAll(".filter-list input"), function(input) {
     return input.checked;
   }).map(function(input) {
     return input.value;
-  })[0];
+  });
 }
 
 function createEmptyListMarkup() {
@@ -314,12 +318,21 @@ function createBugMarkup(bug) {
     textContent: getToolLabel(bug.component)
   }));
 
-  el.appendChild(createNode({
-    attributes: {"class": "mentor"},
-    textContent: bug.mentors ? "Mentored by " + bug.mentors_detail.map(function(m) {
-                   return m.real_name;
-                 })[0] : ""
-  }));
+  if (bug.mentors) {
+    el.appendChild(createNode({
+      attributes: {"class": "tag mentor"},
+      textContent: bug.mentors ? "Mentor: " + bug.mentors_detail.map(function(m) {
+                     return m.real_name;
+                   })[0] : ""
+    }));
+  }
+
+  if (isGoodFirst(bug)) {
+    el.appendChild(createNode({
+      attributes: {"class": "tag good-first-bug"},
+      textContent: "Good First Bug"
+    }));
+  }
 
   el.appendChild(createNode({
     attributes: {
@@ -375,11 +388,11 @@ function search() {
     return;
   }
 
-  var type = getSelectedType();
+  var filters = getSelectedFilters();
 
   var index = ++requestIndex;
   document.body.classList.add("loading");
-  getBugs({type: type, components: componentKeys}, function(list) {
+  getBugs({filters: filters, components: componentKeys}, function(list) {
     if (index !== requestIndex) {
       // A new request was started in the meantime, drop this one.
       return;

@@ -239,8 +239,23 @@ a:hover {
   margin-bottom: .5em;
 }
 
-.bug .mentor {
-  color: #ccc;
+.bug .tag {
+  display: inline-block;
+  padding: 2px;
+  border-radius: 2px;
+  margin-right: 2px;
+  border: 1px solid;
+  font-size: .8em;
+}
+
+.bug .tag.mentor {
+  border-color: #8cc6c6;
+  background: #bef8f8;
+}
+
+.bug .tag.good-first-bug {
+  border-color: #ff8700;
+  background: #ffc369;
 }
 
 .bug .toggle-comment {

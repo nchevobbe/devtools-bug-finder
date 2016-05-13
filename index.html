@@ -19,22 +19,14 @@
   <div class="separated">
     <input class="search-input" type="text" placeholder="Search displayed bugs" />
   </div>
-  <ul class="type-list filters separated">
+  <ul class="filter-list filters separated">
     <li>
-      <input id="good-first" type="radio" name="type" value="good-first" checked />
-      <label for="good-first">Easy bugs only</label>
+      <input id="good-first" type="checkbox" name="type" value="good-first" checked />
+      <label for="good-first">Good first bugs</label>
     </li>
     <li>
-      <input id="all-mentored" type="radio" name="type" value="all-mentored" />
-      <label for="all-mentored">Mentored bugs</label>
-    </li>
-    <li>
-      <input id="all-polish" type="radio" name="type" value="all-polish" />
-      <label for="all-polish">Polish bugs</label>
-    </li>
-    <li>
-      <input id="all-bugs" type="radio" name="type" value="all-bugs" />
-      <label for="all-bugs">All bugs</label>
+      <input id="mentored" type="checkbox" name="type" value="mentored" />
+      <label for="mentored">Mentored bugs</label>
     </li>
   </ul>
   <ul class="tools-list filters separated">
