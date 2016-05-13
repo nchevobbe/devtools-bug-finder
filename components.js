@@ -27,22 +27,29 @@ var COMPONENT_MAPPING = {
     components: ["Developer Tools: Memory",
                  "Developer Tools: Performance Tools (Profiler/Timeline)"]
   },
+  "jsonviewer": {
+    label: "JSON Viewer",
+    components: ["Developer Tools: JSON Viewer"]
+  },
   "storage": {
     label: "Storage Inspector",
     components: ["Developer Tools: Storage Inspector"]
   },
-  "canvas": {
-    label: "Canvas & WebGL",
-    components: ["Developer Tools: Canvas Debugger",
-                 "Developer Tools: WebGL Shader Editor"]
-  },
-  "gcli": {
-    label: "Command Line",
-    components: ["Developer Tools: Graphic Commandline and Toolbar"]
+  "dom": {
+    label: "DOM Panel",
+    components: ["Developer Tools: DOM"]
   },
   "responsive": {
     label: "Responsive Mode",
     components: ["Developer Tools: Responsive Mode"]
+  },
+  "aboutdebugging": {
+    label: "about:debugging",
+    components: ["Developer Tools: about:debugging"]
+  },
+  "gcli": {
+    label: "Command Line",
+    components: ["Developer Tools: Graphic Commandline and Toolbar"]
   },
   "scratchpad": {
     label: "Scratchpad",
@@ -52,21 +59,14 @@ var COMPONENT_MAPPING = {
     label: "Web Audio Editor",
     components: ["Developer Tools: Web Audio Editor"]
   },
+  "canvas": {
+    label: "Canvas & WebGL",
+    components: ["Developer Tools: Canvas Debugger",
+                 "Developer Tools: WebGL Shader Editor"]
+  },
   "webide": {
     label: "WebIDE",
     components: ["Developer Tools: WebIDE"]
-  },
-  "jsonviewer": {
-    label: "JSON Viewer",
-    components: ["Developer Tools: JSON Viewer"]
-  },
-  "aboutdebugging": {
-    label: "about:debugging",
-    components: ["Developer Tools: about:debugging"]
-  },
-  "dom": {
-    label: "DOM Panel",
-    components: ["Developer Tools: DOM"]
   },
   "main": {
     label: "Shared, Framework, Untriaged",
