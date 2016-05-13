@@ -183,8 +183,8 @@ function getFirstComment(bugId, cb) {
 
 function toggleFirstComment(bugEl) {
   bugEl.classList.toggle("expanded");
-  var commentEl = bugEl.querySelector(".comment");
 
+  var commentEl = bugEl.querySelector(".comment");
   if (commentEl.textContent === "") {
     document.body.classList.add("loading");
     commentEl.textContent = "Loading ...";
@@ -266,7 +266,7 @@ function createEmptyListMarkup() {
     attributes: {
       "class": "bug"
     },
-    textContent: "No bugs found"
+    textContent: "No bugs found, try removing filters"
   });
 }
 
@@ -279,25 +279,6 @@ function createBugMarkup(bug) {
     }
   });
 
-  if (isInactive(bug)) {
-    el.appendChild(createNode({
-      attributes: {
-        "class": "old-bug",
-        "title": "This bug has been inactive for more than " +
-                 INACTIVE_AFTER + " days"
-      }
-    }));
-  }
-
-  if (hasPatch(bug)) {
-    el.appendChild(createNode({
-      attributes: {
-        "class": "has-patch",
-        "title": "This bug has an attached patch"
-      }
-    }));
-  }
-
   var titleContainer = createNode({
     attributes: {"class": "bug-link"}
   });
@@ -305,37 +286,25 @@ function createBugMarkup(bug) {
 
   titleContainer.appendChild(createNode({
     tagName: "a",
-    textContent: "Bug " + bug.id + " - " + bug.summary,
+    textContent: bug.summary,
     attributes: {
       href: BUG_URL + bug.id,
       target: "_blank"
     }
   }));
 
-  el.appendChild(createNode({
+  titleContainer.appendChild(createNode({
+    tagName: "a",
+    textContent: "#" + bug.id,
     attributes: {
-      "class": "tool tool-" + getToolID(bug.component)
-    },
-    textContent: getToolLabel(bug.component)
+      "class": "bug-number",
+      "href": BUG_URL + bug.id,
+      "target": "_blank"
+    }
   }));
 
-  if (bug.mentors) {
-    el.appendChild(createNode({
-      attributes: {"class": "tag mentor"},
-      textContent: bug.mentors ? "Mentor: " + bug.mentors_detail.map(function(m) {
-                     return m.real_name;
-                   })[0] : ""
-    }));
-  }
-
-  if (isGoodFirst(bug)) {
-    el.appendChild(createNode({
-      attributes: {"class": "tag good-first-bug"},
-      textContent: "Good First Bug"
-    }));
-  }
-
-  el.appendChild(createNode({
+  titleContainer.appendChild(createNode({
+    tagName: "span",
     attributes: {
       "class": "toggle-comment",
       "title": "Toggle the first comment for this bug"
@@ -344,8 +313,58 @@ function createBugMarkup(bug) {
 
   el.appendChild(createNode({
     tagName: "pre",
-    attributes: {"class": "comment"}
+    attributes: {"class": "box comment"}
   }));
+
+  if (getSelectedTools().length > 1) {
+    el.appendChild(createNode({
+      attributes: {"class": "tag tool"},
+      textContent: getToolLabel(bug.component)
+    }));
+  }
+
+  if (bug.mentors) {
+    el.appendChild(createNode({
+      attributes: {
+        "class": "tag mentor",
+        "title": "This bug is mentored, even if you have never contributed before, someone will help you"
+      },
+      textContent: bug.mentors ? "Mentor: " + bug.mentors_detail.map(function(m) {
+                     return m.real_name;
+                   })[0] : "",
+    }));
+  }
+
+  if (isGoodFirst(bug)) {
+    el.appendChild(createNode({
+      attributes: {
+        "class": "tag good-first-bug",
+        "title": "This bug has been marked by the team as a good first bug, it should be easy to fix"
+      },
+      textContent: "Good First Bug",
+    }));
+  }
+
+  if (isInactive(bug)) {
+    el.appendChild(createNode({
+      attributes: {
+        "class": "tag old-bug",
+        "title": "This bug has been inactive for more than " +
+                 INACTIVE_AFTER + " days"
+      },
+      textContent: "Inactive"
+    }));
+  }
+
+  if (hasPatch(bug)) {
+    el.appendChild(createNode({
+      attributes: {
+        "class": "tag has-patch",
+        "title": "This bug already has a proposed fix, but is unassigned or inactive, feel free to resume the work"
+      },
+      textContent: "Patch Submitted"
+    }));
+  }
 
   return el;
 }

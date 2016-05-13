@@ -61,34 +61,6 @@ a:hover {
   text-decoration: none;
 }
 
-/* Tool colors */
-
-[class*="tool-"]::before {
-  content: " ";
-  width: .8em;
-  height: .8em;
-  margin-right: .5em;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.tool-inspector::before {background: #C717FF;}
-.tool-console::before {background: #0070E8;}
-.tool-debugger::before {background: #07FF44;}
-.tool-network::before {background: #E8D300;}
-.tool-perf::before {background: #846CFF;}
-.tool-storage::before {background: #4DE8DE;}
-.tool-canvas::before {background: #A7FF5C;}
-.tool-gcli::before {background: #E8B84D;}
-.tool-responsive::before {background: #FF665C;}
-.tool-scratchpad::before {background: #BAD7FF;}
-.tool-audio::before {background: #95E8AE;}
-.tool-webide::before {background: #E8B795;}
-.tool-jsonviewer::before {background: #ED2655;}
-.tool-main::before {background: #2F2DE8;}
-.tool-aboutdebugging::before {background: #FFF9AA;}
-.tool-dom::before {background: #AA2E5F;}
-
 /* General page layout */
 
 .header {
@@ -207,36 +179,55 @@ a:hover {
 .bug {
   padding: .5em;
   position: relative;
-  min-height: 4em;
 }
 
 .bug:hover {
-  background: #eee;
+  background: #fafafa;
 }
 
 .dark .bug:hover {
   background: #14171A;
 }
 
-.bug .old-bug,
-.bug .has-patch {
-  float: right;
-  width: .8em;
-  height: .8em;
-  background: url(old.svg);
-}
-
-.bug .has-patch {
-  background: url(patch.svg);
-}
-
 .bug .bug-link {
   margin-bottom: .5em;
 }
 
-.bug .tool {
+.bug .bug-link a {
+  text-decoration: none;
+  color: #333;
   font-weight: bold;
-  margin-bottom: .5em;
+}
+
+.dark .bug .bug-link a {
+  color: #D96629;
+}
+
+.bug .bug-link a:hover {
+  color: #4C9ED9;
+}
+
+.bug .bug-link .bug-number {
+  font-size: .9em;
+  text-decoration: none;
+  font-weight: normal;
+  margin-left: .5em;
+  opacity: .5;
+}
+
+.bug .toggle-comment {
+  opacity: .5;
+  float: right;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.bug .toggle-comment::before {
+  content: "Read more";
+}
+
+.bug.expanded .toggle-comment::before {
+  content: "Hide comment"
 }
 
 .bug .tag {
@@ -245,7 +236,14 @@ a:hover {
   border-radius: 2px;
   margin-right: 2px;
   border: 1px solid;
+  border-width: 0 0 1px 0;
   font-size: .8em;
+  max-width: 130px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  cursor: help;
+  color: #333;
 }
 
 .bug .tag.mentor {
@@ -258,31 +256,39 @@ a:hover {
   background: #ffc369;
 }
 
-.bug .toggle-comment {
-  position: absolute;
-  top: 4em;
-  right: .5em;
-  width: .8em;
-  height: .8em;
-  border-radius: 50%;
-  background: url(expand.svg);
-  transition: all .2s;
-  cursor: pointer;
+.bug .tag.old-bug {
+  background-image: url(old.svg);
+  background-repeat: no-repeat;
+  background-position: center left;
+  padding-left: 1.5em;
+  background-color: #d7d7d7;
+  border-color: #999;
 }
 
-.bug.expanded .toggle-comment {
-  -webkit-transform: rotate(180deg);
-  transform: rotate(180deg);
+.bug .tag.has-patch {
+  background-image: url(patch.svg);
+  background-repeat: no-repeat;
+  background-position: center left;
+  padding-left: 1.5em;
+  background-color: #73f5b9;
+  border-color: #0bc247;
+}
+
+.bug .tag.tool {
+  border-color: #150f57;
+  background: #2b8fca;
+  color: white;
 }
 
 .bug .comment {
   font-size: .9em;
   color: #696969;
-  width: 100%;
   overflow: hidden;
   margin: 1em 0 0 0;
   white-space: pre-line;
   display: none;
+  margin: 1em;
+  padding: 1em;
 }
 
 .bug.expanded .comment {
