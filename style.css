@@ -257,19 +257,11 @@ a:hover {
 }
 
 .bug .tag.old-bug {
-  background-image: url(old.svg);
-  background-repeat: no-repeat;
-  background-position: center left;
-  padding-left: 1.5em;
   background-color: #d7d7d7;
   border-color: #999;
 }
 
 .bug .tag.has-patch {
-  background-image: url(patch.svg);
-  background-repeat: no-repeat;
-  background-position: center left;
-  padding-left: 1.5em;
   background-color: #73f5b9;
   border-color: #0bc247;
 }
