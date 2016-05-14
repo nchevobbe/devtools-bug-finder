@@ -71,12 +71,12 @@ a:hover {
 
 .sidebar {
   float: left;
-  margin: 3em;
+  margin: 0 3em 3em 3em;
   width: 20%;
 }
 
 .main {
-  margin: 3em 3em 0 calc(6em + 20%);
+  margin: 0 3em 0 calc(6em + 20%);
 }
 
 .footer {
@@ -296,4 +296,24 @@ a:hover {
   padding: .5em;
   border: 1px solid #E1E8ED;
   border-radius: 5px;
+}
+
+/* Top contributors */
+
+.top-contributors {
+  text-align: center;
+  padding: 1em 3em;
+}
+
+.top-contributors h2 {
+  margin: 0;
+  font-size: 1em;
+}
+
+.top-contributors .contributor {
+  display: inline;
+}
+
+.top-contributors .contributor:not(:last-child)::after {
+  content: ", ";
 }

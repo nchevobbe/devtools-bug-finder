@@ -41,7 +41,7 @@ var COMPONENT_MAPPING = {
   },
   "responsive": {
     label: "Responsive Mode",
-    components: ["Developer Tools: Responsive Mode"]
+    components: ["Developer Tools: Responsive Design Mode"]
   },
   "aboutdebugging": {
     label: "about:debugging",
@@ -73,6 +73,34 @@ var COMPONENT_MAPPING = {
     components: ["Developer Tools",
                  "Developer Tools: Framework",
                  "Developer Tools: Object Inspector",
-                 "Developer Tools: Source Editor"]
+                 "Developer Tools: Source Editor",
+                 "Developer Tools: Shared Components"]
   },
 };
+
+/**
+ * Get a list of bugzilla component names given a list of COMPONENT_MAPPING
+ * keys.
+ * @param {Array} keys A list of keys as found in the COMPONENT_MAPPING object.
+ * If instead of an array, the special string "all" is passed, then all
+ * components are returned.
+ * @return {Array} A list of bugzilla component names for these keys.
+ */
+function getBugzillaComponents(keys) {
+  if (!keys) {
+    return [];
+  }
+
+  if (keys === "all") {
+    keys = Object.keys(COMPONENT_MAPPING);
+  }
+
+  var components = [];
+  for (var i = 0; i < keys.length; i++) {
+    var component = COMPONENT_MAPPING[keys[i]];
+    if (component) {
+      components = components.concat(component.components);
+    }
+  }
+  return components;
+}
