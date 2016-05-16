@@ -1,86 +1,8 @@
 "use strict";
 
-var BUG_URL = "https://bugzilla.mozilla.org/show_bug.cgi?id=";
-var BUG_STATUS = ["NEW", "REOPENED", "UNCONFIRMED"];
-var WHITEBOARD_TYPE = "contains_all";
-var PRODUCT = "Firefox";
-var GOOD_FIRST_BUG_WHITEBOARD = "good first bug";
-
-// How many days do we wait until considering an assigned bug as
-// unassigned.
-var INACTIVE_AFTER = 25;
-var INCLUDED_FIELDS = ["id",
-                       "assigned_to",
-                       "summary",
-                       "last_change_time",
-                       "component",
-                       "whiteboard",
-                       "mentors",
-                       "attachments"];
-
 var searchString = null;
 var currentBugList = null;
 var bugzilla = bz.createClient({url: "https://bugzilla.mozilla.org/bzapi"});
-
-function createNode(options) {
-  var el = document.createElement(options.tagName || "div");
-
-  if (options.attributes) {
-    for (var i in options.attributes) {
-      el.setAttribute(i, options.attributes[i]);
-    }
-  }
-
-  if (options.textContent) {
-    el.textContent = options.textContent;
-  }
-
-  return el;
-}
-
-function debounce(func, wait) {
-  var timeout, args, context, timestamp, result;
-
-  var later = function() {
-    var last = Date.now() - timestamp;
-
-    if (last < wait && last >= 0) {
-      timeout = setTimeout(later, wait - last);
-    } else {
-      timeout = null;
-      result = func.apply(context, args);
-      if (!timeout) {
-        context = args = null;
-      }
-    }
-  };
-
-  return function() {
-    context = this;
-    args = arguments;
-    timestamp = Date.now();
-    if (!timeout) {
-      timeout = setTimeout(later, wait);
-    }
-
-    return result;
-  };
-}
-
-function getComponentParams(componentKeys) {
-  if (!componentKeys) {
-    return [];
-  }
-
-  var components = [];
-  for (var i = 0; i < componentKeys.length; i++) {
-    var component = COMPONENT_MAPPING[componentKeys[i]];
-    if (component) {
-      components = components.concat(component.components);
-    }
-  }
-  return components;
-}
 
 function hasFilter(name, filters) {
   for (var i = 0; i < filters.length; i ++) {
@@ -96,18 +18,25 @@ function getSearchParams(options) {
 
   var params = {
     // Search only devtools bugs.
-    "product": PRODUCT,
+    "product": "Firefox",
     "component": [],
     // Opened bugs only.
-    "bug_status": BUG_STATUS,
+    "bug_status": ["NEW", "REOPENED", "UNCONFIRMED"],
     // Include all these fields in the response.
-    "include_fields": INCLUDED_FIELDS,
-    "whiteboard_type": WHITEBOARD_TYPE,
+    "include_fields": ["id",
+                       "assigned_to",
+                       "summary",
+                       "last_change_time",
+                       "component",
+                       "whiteboard",
+                       "mentors",
+                       "attachments"],
+    "whiteboard_type": "contains_all",
     // List of whiteboard flags to search for.
     "status_whiteboard": []
   };
 
-  params.component = getComponentParams(options.components);
+  params.component = getBugzillaComponents(options.components);
 
   if (hasFilter("good-first", options.filters)) {
     params.status_whiteboard.push(GOOD_FIRST_BUG_WHITEBOARD);
@@ -452,18 +381,108 @@ function getToolID(component) {
   return null;
 }
 
-function closest(rootEl, selector) {
-  if (rootEl.closest) {
-    return rootEl.closest(selector);
-  }
+function displayTopContributors(rootEl) {
+  var today = new Date();
+  var toStr = formatBugzillaDate(today);
 
-  while (rootEl) {
-    if (rootEl.matches(selector)) {
-      return rootEl;
+  today.setDate(today.getDate() - 30);
+  var fromStr = formatBugzillaDate(today);
+
+  var options = {
+    // Search only devtools bugs.
+    "product": "Firefox",
+    "component": getBugzillaComponents("all"),
+    // Only bugs assigned to someone.
+    "email1": "nobody",
+    "email1_type": "not_contains",
+    "email1_assigned_to": "1",
+    // Resolved or verified only.
+    "bug_status": ["RESOLVED", "VERIFIED"],
+    // Actually fixed.
+    "resolution": "FIXED",
+    // Include all these fields in the response.
+    "include_fields": ["id", "assigned_to", "summary"],
+    // Get only bugs that got fixed between the FROM and TO dates.
+    "changed_after": fromStr,
+    "changed_before": toStr,
+    "changed_field": "resolution",
+    "changed_field_to": "FIXED"
+  };
+
+  bugzilla.searchBugs(options, function(_, bugs) {
+    rootEl.innerHTML = "";
+    rootEl.classList.remove("loading");
+
+    var contributorsDict = {};
+    var totalBugs = 0;
+
+    bugs.forEach(function(bug) {
+      var key = bug.assigned_to.name;
+      if (!includes(STAFF, key)) {
+        if (!contributorsDict[key]) {
+          contributorsDict[key] = [];
+        }
+        contributorsDict[key].push(bug);
+        totalBugs += 1;
+      }
+    });
+
+    var contributorsList = [];
+    for (var key in contributorsDict) {
+      contributorsList.push({
+        name: contributorsDict[key][0].assigned_to.real_name,
+        key: key,
+        bugs: contributorsDict[key]
+      });
     }
-    rootEl = rootEl.parentNode;
-  }
-  return null;
+    contributorsList.sort(function(a, b) {
+      return b.bugs.length - a.bugs.length;
+    });
+
+    var summary = createNode({
+      tagName: "li",
+      attributes: {"class": "summary"},
+      textContent: totalBugs  + " bugs were fixed by contributors this month: "
+    });
+    rootEl.appendChild(summary);
+
+    for (var i = 0; i < contributorsList.length; i ++) {
+      displayContributor(contributorsList[i], rootEl);
+    }
+  });
+}
+
+function displayContributor(contributor, rootEl) {
+  var el = createNode({
+    tagName: "li",
+    attributes: {"class": "contributor"}
+  });
+
+  var name = createNode({
+    tagName: "a",
+    attributes: {
+      target: "_blank",
+      href: PROFILE_URL + contributor.key
+    },
+    textContent: contributor.name
+  });
+  el.appendChild(name);
+
+  el.appendChild(document.createTextNode(" ("));
+
+  var number = createNode({
+    tagName: "a",
+    attributes: {
+      target: "_blank",
+      href: BUG_LIST_URL + contributor.bugs.map(function(b) {return b.id}).join(",")
+    },
+    textContent: contributor.bugs.length
+  });
+  el.appendChild(number);
+
+  el.appendChild(document.createTextNode(")"));
+
+  rootEl.appendChild(el);
 }
 
 function init() {
@@ -490,4 +509,7 @@ function init() {
     searchString = this.value;
     displayBugs(currentBugList);
   }, 100));
+
+  // Find the top contributors in the past month
+  displayTopContributors(document.querySelector("#top-contributors"));
 }
