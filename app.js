@@ -411,8 +411,10 @@ function displayTopContributors(rootEl) {
 
   bugzilla.searchBugs(options, function(_, bugs) {
     rootEl.innerHTML = "";
+    rootEl.classList.remove("loading");
 
     var contributorsDict = {};
+    var totalBugs = 0;
 
     bugs.forEach(function(bug) {
       var key = bug.assigned_to.name;
@@ -421,22 +423,28 @@ function displayTopContributors(rootEl) {
           contributorsDict[key] = [];
         }
         contributorsDict[key].push(bug);
+        totalBugs += 1;
       }
     });
 
     var contributorsList = [];
     for (var key in contributorsDict) {
-      if (contributorsDict[key].length > 1) {
-        contributorsList.push({
-          name: contributorsDict[key][0].assigned_to.real_name,
-          key: key,
-          bugs: contributorsDict[key]
-        });
-      }
+      contributorsList.push({
+        name: contributorsDict[key][0].assigned_to.real_name,
+        key: key,
+        bugs: contributorsDict[key]
+      });
     }
     contributorsList.sort(function(a, b) {
       return b.bugs.length - a.bugs.length;
     });
+
+    var summary = createNode({
+      tagName: "li",
+      attributes: {"class": "summary"},
+      textContent: totalBugs  + " bugs were fixed by contributors this month: "
+    });
+    rootEl.appendChild(summary);
 
     for (var i = 0; i < contributorsList.length; i ++) {
       displayContributor(contributorsList[i], rootEl);
@@ -460,7 +468,7 @@ function displayContributor(contributor, rootEl) {
   });
   el.appendChild(name);
 
-  el.appendChild(document.createTextNode(" fixed "));
+  el.appendChild(document.createTextNode(" ("));
 
   var number = createNode({
     tagName: "a",
@@ -468,9 +476,11 @@ function displayContributor(contributor, rootEl) {
       target: "_blank",
       href: BUG_LIST_URL + contributor.bugs.map(function(b) {return b.id}).join(",")
     },
-    textContent: contributor.bugs.length + " bugs"
+    textContent: contributor.bugs.length
   });
   el.appendChild(number);
+
+  el.appendChild(document.createTextNode(")"));
 
   rootEl.appendChild(el);
 }
