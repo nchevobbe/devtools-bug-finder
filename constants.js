@@ -7,7 +7,8 @@ var STAFF = [
   "ttromey", "jsantell", "gl", "lclark", "janx", "ejpbruel", "mratcliffe",
   "gtatum", "jwalker", "zer0", "past", "jfong", "mihai.sucan", "paul",
   "fayearthur", "anton", "dcamp", "jimb", "bbenvie", "rcampbell", "dtownsend",
-  "yzenevich", "erahm", "kumar.mcmillan", "gasolin", "amarchesini", "winter2718"
+  "yzenevich", "erahm", "kumar.mcmillan", "gasolin", "amarchesini",
+  "winter2718", "terrence", "bchabod"
 ];
 
 // URL prefix to open a bug in bugzilla.
