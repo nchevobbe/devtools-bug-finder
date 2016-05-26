@@ -93,6 +93,12 @@ function getBugs(options, cb) {
     if (!list) {
       return;
     }
+
+    // Sort bugs by bug id so the newest end up at the top.
+    list.sort(function(a, b) {
+      return b.id - a.id;
+    });
+
     // Post-processing filtering: either unassigned bugs or assigned
     // but with no activity for a while.
     list = list.filter(function(bug) {
