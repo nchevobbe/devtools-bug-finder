@@ -2,13 +2,13 @@
 
 // Name of devtools mozilla staff.
 var STAFF = [
-  "pbrosset", "vporof", "jlong", "poirot.alex", "bgrinstead", "nfitzgerald",
-  "jdescottes", "jryans", "odvarko", "clarkbw", "jlaster", "hholmes",
-  "ttromey", "jsantell", "gl", "lclark", "janx", "ejpbruel", "mratcliffe",
-  "gtatum", "jwalker", "zer0", "past", "jfong", "mihai.sucan", "paul",
-  "fayearthur", "anton", "dcamp", "jimb", "bbenvie", "rcampbell", "dtownsend",
-  "yzenevich", "erahm", "kumar.mcmillan", "gasolin", "amarchesini", "dbaron",
-  "winter2718", "terrence", "bchabod", "mvonbriesen", "jaideepb", "rchien"
+  "pbrosset", "vporof", "jlong", "poirot.alex", "bgrinstead", "nfitzgerald", "jdescottes",
+  "jryans", "odvarko", "clarkbw", "jlaster", "hholmes", "ttromey", "jsantell", "gl",
+  "lclark", "janx", "ejpbruel", "mratcliffe", "gtatum", "jwalker", "zer0", "past",
+  "jfong", "mihai.sucan", "paul", "fayearthur", "anton", "dcamp", "jimb", "bbenvie",
+  "rcampbell", "dtownsend", "yzenevich", "erahm", "kumar.mcmillan", "gasolin", "npang",
+  "amarchesini", "dbaron", "bzbarsky", "winter2718", "terrence", "bchabod", "mvonbriesen",
+  "jaideepb", "rchien", "bkelly", "matt.woodrow"
 ];
 
 // URL prefix to open a bug in bugzilla.
