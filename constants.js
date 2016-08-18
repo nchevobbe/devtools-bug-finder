@@ -22,7 +22,7 @@ var BUG_LIST_URL = "https://bugzilla.mozilla.org/buglist.cgi?bug_id=";
 var PROFILE_URL = "https://bugzilla.mozilla.org/user_profile?login=";
 
 // Whiteboard flag for good first bugs.
-var GOOD_FIRST_BUG_WHITEBOARD = "good first bug";
+var GOOD_FIRST_BUG_KEYWORD = "good-first-bug";
 
 // How many days do we wait until considering an assigned bug as unassigned.
 var INACTIVE_AFTER = 25;

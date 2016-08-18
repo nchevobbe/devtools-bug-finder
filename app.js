@@ -28,18 +28,17 @@ function getSearchParams(options) {
                        "summary",
                        "last_change_time",
                        "component",
-                       "whiteboard",
+                       "keywords",
                        "mentors",
                        "attachments"],
-    "whiteboard_type": "contains_all",
-    // List of whiteboard flags to search for.
-    "status_whiteboard": []
+    // List of keywords to search for.
+    "keywords": []
   };
 
   params.component = getBugzillaComponents(options.components);
 
   if (hasFilter("good-first", options.filters)) {
-    params.status_whiteboard.push(GOOD_FIRST_BUG_WHITEBOARD);
+    params.keywords.push(GOOD_FIRST_BUG_KEYWORD);
   }
 
   if (hasFilter("mentored", options.filters)) {
@@ -64,7 +63,7 @@ function isInactive(bug) {
 }
 
 function isGoodFirst(bug) {
-  return bug.whiteboard.indexOf(GOOD_FIRST_BUG_WHITEBOARD) !== -1;
+  return bug.keywords.indexOf(GOOD_FIRST_BUG_KEYWORD) !== -1;
 }
 
 function hasPatch(bug) {
