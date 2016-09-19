@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Inspector triage</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <style>
+  main {
+    flex-direction: column;
+  }
+  .assignee::before { content: "("; }
+  .assignee::after { content: ")"; }
+  .assignee {
+    margin-left: .5em;
+  }
+  .bug .bug-link {
+    margin: 0;
+  }
+  </style>
+</head>
+<body>
+<main>
+  <div class="untriaged">
+    <h1>Untriaged bugs</h1>
+    <ul class="bugs box loading"></ul>
+  </div>
+  <div class="back-to-triage">
+    <h1>Bugs back to triage</h1>
+    <ul class="bugs box loading"></ul>
+  </div>
+  <div class="P1s">
+    <h1>P1s</h1>
+    <ul class="bugs box loading"></ul>
+  </div>
+  <div class="top-bugs">
+    <h1>Top P2s</h1>
+    <ul class="bugs box loading"></ul>
+  </div>
+</main>
+<script type="text/javascript" src="bz-0.2.3.js"></script>
+<script type="text/javascript" src="components.js"></script>
+<script type="text/javascript" src="constants.js"></script>
+<script type="text/javascript" src="utils.js"></script>
+<script>
+"use strict";
+
+var bugzilla = bz.createClient({url: "https://bugzilla.mozilla.org/bzapi"});
+
+function searchForUntriagedBugs(cb) {
+  var options = {
+    "product": "Firefox",
+    "component": COMPONENT_MAPPING.inspector.components,
+    "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
+    "include_fields": ["id", "summary"],
+    "priority": ["--"]
+  };
+
+  bugzilla.searchBugs(options, function(_, list) {
+    cb(list);
+  });
+}
+
+function searchForBugsBackForReTriage(cb) {
+  var options = {
+    "product": "Firefox",
+    "component": COMPONENT_MAPPING.inspector.components,
+    "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
+    "include_fields": ["id", "summary"],
+    "whiteboard": "inspector-triage"
+  };
+
+  bugzilla.searchBugs(options, function(_, list) {
+    cb(list);
+  });
+}
+
+function searchForP1s(cb) {
+  var options = {
+    "product": "Firefox",
+    "component": COMPONENT_MAPPING.inspector.components,
+    "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
+    "include_fields": ["id", "summary", "assigned_to", "whiteboard", "severity"],
+    "priority": ["P1"]
+  };
+
+  bugzilla.searchBugs(options, function(_, list) {
+    // Filter out devtools.html bugs and enhancements
+    cb(list.filter(function(bug) {
+      return !bug.whiteboard.includes("devtools-html") &&
+             bug.severity !== "enhancement";
+    }));
+  });
+}
+
+function searchForTopBugs(cb) {
+  bugzilla.getBug("top-inspector-bugs", function(_, bug) {
+    var options = {
+      "product": "Firefox",
+      "component": COMPONENT_MAPPING.inspector.components,
+      "bug_status": ["NEW", "REOPENED"],
+      "include_fields": ["id", "summary"],
+      "id": bug.depends_on
+    };
+
+    bugzilla.searchBugs(options, function(_, list) {
+      cb(list);
+    });
+  });
+}
+
+function createBug(bug) {
+  var el = createNode({
+    tagName: "li",
+    attributes: {
+      "class": "bug separated",
+      "data-id": bug.id
+    }
+  });
+
+  var titleContainer = createNode({
+    attributes: {"class": "bug-link"}
+  });
+  el.appendChild(titleContainer);
+
+  titleContainer.appendChild(createNode({
+    tagName: "a",
+    textContent: bug.summary,
+    attributes: {
+      href: bug.id ? BUG_URL + bug.id : "#",
+      target: bug.id ? "_blank" : ""
+    }
+  }));
+
+  if (bug.id) {
+    titleContainer.appendChild(createNode({
+      tagName: "a",
+      textContent: "#" + bug.id,
+      attributes: {
+        "class": "bug-number",
+        "href": BUG_URL + bug.id,
+        "target": "_blank"
+      }
+    }));
+  }
+
+  if (bug.assigned_to) {
+    titleContainer.appendChild(createNode({
+      tagName: "span",
+      textContent: bug.assigned_to.name,
+      attributes: {
+        "class": "assignee"
+      }
+    }));
+  }
+
+  return el;
+}
+
+function createBugs(bugs, el) {
+  el.classList.remove("loading");
+
+  if (!bugs.length) {
+    el.appendChild(createBug({
+      summary: "No bugs found"
+    }));
+  }
+
+  bugs.forEach(function(bug) {
+    el.appendChild(createBug(bug));
+  });
+}
+
+searchForUntriagedBugs(function(bugs) {
+  var el = document.querySelector(".untriaged ul");
+  createBugs(bugs, el);
+});
+
+searchForBugsBackForReTriage(function(bugs) {
+  var el = document.querySelector(".back-to-triage ul");
+  createBugs(bugs, el);
+});
+
+searchForP1s(function(bugs) {
+  var el = document.querySelector(".P1s ul");
+  createBugs(bugs, el);
+});
+
+searchForTopBugs(function(bugs) {
+  var el = document.querySelector(".top-bugs ul");
+  createBugs(bugs, el);
+});
+</script>
+</body>
+</html>
