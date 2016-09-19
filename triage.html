@@ -5,35 +5,48 @@
   <title>Inspector triage</title>
   <link rel="stylesheet" type="text/css" href="style.css">
   <style>
+  body {
+    background-color: rgb(251, 250, 249);
+    font-size: 15px;
+  }
   main {
     flex-direction: column;
-  }
-  .assignee::before { content: "("; }
-  .assignee::after { content: ")"; }
-  .assignee {
-    margin-left: .5em;
+    align-items: stretch;
   }
   .bug .bug-link {
     margin: 0;
+  }
+  .bug .bug-link a {
+    font-weight: normal;
+  }
+  .bug .priority, .bug .assignee {
+    float: right;
+    margin: 0 .5em;
+    font-weight: bold;
   }
   </style>
 </head>
 <body>
 <main>
+  <h1>Inspector bug triage dashboard</h1>
   <div class="untriaged">
-    <h1>Untriaged bugs</h1>
+    <h2>Untriaged bugs</h2>
     <ul class="bugs box loading"></ul>
   </div>
   <div class="back-to-triage">
-    <h1>Bugs back to triage</h1>
+    <h2>Bugs back to triage</h2>
     <ul class="bugs box loading"></ul>
   </div>
   <div class="P1s">
-    <h1>P1s</h1>
+    <h2>P1s</h2>
     <ul class="bugs box loading"></ul>
   </div>
   <div class="top-bugs">
-    <h1>Top P2s</h1>
+    <h2>Top P2s</h2>
+    <ul class="bugs box loading"></ul>
+  </div>
+  <div class="intermittents">
+    <h2>Top intermittents</h2>
     <ul class="bugs box loading"></ul>
   </div>
 </main>
@@ -92,7 +105,7 @@ function searchForP1s(cb) {
   });
 }
 
-function searchForTopBugs(cb) {
+function searchForTopP2s(cb) {
   bugzilla.getBug("top-inspector-bugs", function(_, bug) {
     var options = {
       "product": "Firefox",
@@ -105,6 +118,21 @@ function searchForTopBugs(cb) {
     bugzilla.searchBugs(options, function(_, list) {
       cb(list);
     });
+  });
+}
+
+function searchForTopIntermittents(cb) {
+  var options = {
+    "product": "Firefox",
+    "component": COMPONENT_MAPPING.inspector.components,
+    "bug_status": ["NEW", "REOPENED"],
+    "include_fields": ["id", "summary", "priority"],
+    "priority": ["P1", "P2"],
+    "keywords": ["intermittent-failure"]
+  };
+
+  bugzilla.searchBugs(options, function(_, list) {
+    cb(list);
   });
 }
 
@@ -121,6 +149,26 @@ function createBug(bug) {
     attributes: {"class": "bug-link"}
   });
   el.appendChild(titleContainer);
+
+  if (bug.priority) {
+    titleContainer.appendChild(createNode({
+      tagName: "span",
+      textContent: bug.priority,
+      attributes: {
+        "class": "priority"
+      }
+    }));
+  }
+
+  if (bug.assigned_to) {
+    titleContainer.appendChild(createNode({
+      tagName: "span",
+      textContent: bug.assigned_to.name,
+      attributes: {
+        "class": "assignee"
+      }
+    }));
+  }
 
   titleContainer.appendChild(createNode({
     tagName: "a",
@@ -139,16 +187,6 @@ function createBug(bug) {
         "class": "bug-number",
         "href": BUG_URL + bug.id,
         "target": "_blank"
-      }
-    }));
-  }
-
-  if (bug.assigned_to) {
-    titleContainer.appendChild(createNode({
-      tagName: "span",
-      textContent: bug.assigned_to.name,
-      attributes: {
-        "class": "assignee"
       }
     }));
   }
@@ -185,8 +223,13 @@ searchForP1s(function(bugs) {
   createBugs(bugs, el);
 });
 
-searchForTopBugs(function(bugs) {
+searchForTopP2s(function(bugs) {
   var el = document.querySelector(".top-bugs ul");
+  createBugs(bugs, el);
+});
+
+searchForTopIntermittents(function(bugs) {
+  var el = document.querySelector(".intermittents ul");
   createBugs(bugs, el);
 });
 </script>
