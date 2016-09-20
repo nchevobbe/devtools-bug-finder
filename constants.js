@@ -21,6 +21,8 @@ var BUG_LIST_URL = "https://bugzilla.mozilla.org/buglist.cgi?bug_id=";
 // URL prefix to open a bugzilla profile.
 var PROFILE_URL = "https://bugzilla.mozilla.org/user_profile?login=";
 
+var ATTACHMENT_URL = "https://bugzilla.mozilla.org/attachment.cgi?id=";
+
 // Whiteboard flag for good first bugs.
 var GOOD_FIRST_BUG_KEYWORD = "good-first-bug";
 

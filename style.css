@@ -294,6 +294,12 @@ header .links li:first-child {
   display: block;
 }
 
+.bug .comment .attachment {
+  display: block;
+  margin-bottom: .5em;
+  max-height: 200px;
+}
+
 /* Search input */
 
 .search-input {

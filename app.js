@@ -126,8 +126,31 @@ function toggleFirstComment(bugEl) {
     getFirstComment(id, function(comment) {
       document.body.classList.remove("loading");
       commentEl.textContent = comment;
+
+      var attachment = getAttachment(comment);
+      if (attachment) {
+        inlineAttachment(commentEl, attachment);
+      }
     });
   }
+}
+
+function getAttachment(comment) {
+  var match = comment.match(/Created attachment ([0-9]+)([^.]*\.)(png|jpg|jpeg|gif)/i);
+  if (match) {
+    return {id: match[1], name: match[2]};
+  }
+}
+
+function inlineAttachment(commentEl, attachment) {
+  var img = createNode({
+    tagName: "img",
+    attributes: {
+      src: ATTACHMENT_URL + attachment.id,
+      class: "box attachment"
+    }
+  });
+  commentEl.insertBefore(img, commentEl.firstChild);
 }
 
 function getToolTooltip(id) {
