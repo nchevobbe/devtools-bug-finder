@@ -2,11 +2,10 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Inspector triage</title>
+  <title>DevTools Triage Dashboard</title>
   <link rel="stylesheet" type="text/css" href="style.css">
   <style>
   body {
-    background-color: rgb(251, 250, 249);
     font-size: 15px;
   }
   main {
@@ -28,7 +27,7 @@
 </head>
 <body>
 <main>
-  <h1>Inspector bug triage dashboard</h1>
+  <h1>bug triage dashboard</h1>
   <div class="untriaged">
     <h2>Untriaged bugs</h2>
     <ul class="bugs box loading"></ul>
@@ -57,12 +56,26 @@
 <script>
 "use strict";
 
+let tool = "inspector";
+let components = COMPONENT_MAPPING[tool].components;
+
+for (let [key, value] of new URL(document.location).searchParams.entries()) {
+  if (key === "tool" && COMPONENT_MAPPING[value]) {
+    tool = value;
+    components = COMPONENT_MAPPING[value].components;
+  }
+}
+
+const pageTitle = `${tool} bug triage dashboard`;
+document.querySelector("h1").textContent = pageTitle;
+document.title = pageTitle;
+
 var bugzilla = bz.createClient({url: "https://bugzilla.mozilla.org/bzapi"});
 
 function searchForUntriagedBugs(cb) {
   var options = {
     "product": "Firefox",
-    "component": COMPONENT_MAPPING.inspector.components,
+    "component": components,
     "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
     "include_fields": ["id", "summary"],
     "priority": ["--"]
@@ -76,7 +89,7 @@ function searchForUntriagedBugs(cb) {
 function searchForBugsBackForReTriage(cb) {
   var options = {
     "product": "Firefox",
-    "component": COMPONENT_MAPPING.inspector.components,
+    "component": components,
     "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
     "include_fields": ["id", "summary"],
     "whiteboard": "inspector-triage"
@@ -90,7 +103,7 @@ function searchForBugsBackForReTriage(cb) {
 function searchForP1s(cb) {
   var options = {
     "product": "Firefox",
-    "component": COMPONENT_MAPPING.inspector.components,
+    "component": components,
     "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
     "include_fields": ["id", "summary", "assigned_to", "whiteboard", "severity"],
     "priority": ["P1"]
@@ -106,10 +119,10 @@ function searchForP1s(cb) {
 }
 
 function searchForTopP2s(cb) {
-  bugzilla.getBug("top-inspector-bugs", function(_, bug) {
+  bugzilla.getBug(`top-${tool}-bugs`, function(_, bug) {
     var options = {
       "product": "Firefox",
-      "component": COMPONENT_MAPPING.inspector.components,
+      "component": components,
       "bug_status": ["NEW", "REOPENED"],
       "include_fields": ["id", "summary"],
       "id": bug.depends_on
@@ -124,7 +137,7 @@ function searchForTopP2s(cb) {
 function searchForTopIntermittents(cb) {
   var options = {
     "product": "Firefox",
-    "component": COMPONENT_MAPPING.inspector.components,
+    "component": components,
     "bug_status": ["NEW", "REOPENED"],
     "include_fields": ["id", "summary", "priority"],
     "priority": ["P1", "P2"],
