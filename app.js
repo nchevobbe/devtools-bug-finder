@@ -49,33 +49,6 @@ function getSearchParams(options) {
   return params;
 }
 
-function timeFromModified(lastChangeTime) {
-  var lastModified = new Date(lastChangeTime);
-  var today = new Date();
-  var oneDay = 1000 * 60 * 60 * 24;
-  return Math.ceil(
-    (today.getTime() - lastModified.getTime()) / oneDay
-  );
-}
-
-function isInactive(bug) {
-  return timeFromModified(bug.last_change_time) >= INACTIVE_AFTER;
-}
-
-function isGoodFirst(bug) {
-  return bug.keywords.indexOf(GOOD_FIRST_BUG_KEYWORD) !== -1;
-}
-
-function hasPatch(bug) {
-  return bug.attachments && bug.attachments.some(function(attachment) {
-    return attachment.is_patch;
-  });
-}
-
-function isAssigned(bug) {
-  return !bug.assigned_to.name.match(/nobody/);
-}
-
 var pastQueries = {};
 function getBugs(options, cb) {
   options = getSearchParams(options);
