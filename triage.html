@@ -5,9 +5,6 @@
   <title>DevTools Triage Dashboard</title>
   <link rel="stylesheet" type="text/css" href="style.css">
   <style>
-  body {
-    font-size: 15px;
-  }
   main {
     flex-direction: column;
     align-items: stretch;
@@ -22,6 +19,11 @@
     float: right;
     margin: 0 .5em;
     font-weight: bold;
+  }
+  .bug .tag.old-bug {
+    background-color: red;
+    border-color: #832d2d;
+    color: white;
   }
   </style>
 </head>
@@ -105,13 +107,15 @@ function searchForP1s(cb) {
     "product": "Firefox",
     "component": components,
     "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
-    "include_fields": ["id", "summary", "assigned_to", "whiteboard", "severity"],
+    "include_fields": ["id", "summary", "assigned_to", "whiteboard", "severity",
+                       "last_change_time", "attachments"],
     "priority": ["P1"]
   };
 
   bugzilla.searchBugs(options, function(_, list) {
     // Filter out devtools.html bugs and enhancements
     cb(list.filter(function(bug) {
+      console.log(bug)
       return !bug.whiteboard.includes("devtools-html") &&
              bug.severity !== "enhancement";
     }));
@@ -201,6 +205,27 @@ function createBug(bug) {
         "href": BUG_URL + bug.id,
         "target": "_blank"
       }
+    }));
+  }
+
+  if (bug.attachments && bug.attachments.some(
+      a => a.is_patch || a.content_type == "text/x-review-board-request")) {
+    el.appendChild(createNode({
+      attributes: {
+        "class": "tag has-patch",
+        "title": "This bug has a patch already attached"
+      },
+      textContent: "Patch Submitted"
+    }));
+  }
+
+  if (bug.last_change_time && isInactive(bug)) {
+    el.appendChild(createNode({
+      attributes: {
+        "class": "tag old-bug",
+        "title": `This bug has been inactive for more than ${INACTIVE_AFTER} days`
+      },
+      textContent: "Inactive"
     }));
   }
 
