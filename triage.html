@@ -122,13 +122,13 @@ function searchForP1s(cb) {
   });
 }
 
-function searchForTopP2s(cb) {
+function searchForTopBugs(cb) {
   bugzilla.getBug(`top-${tool}-bugs`, function(_, bug) {
     var options = {
       "product": "Firefox",
       "component": components,
       "bug_status": ["NEW", "REOPENED"],
-      "include_fields": ["id", "summary"],
+      "include_fields": ["id", "summary", "assigned_to"],
       "id": bug.depends_on
     };
 
@@ -177,7 +177,7 @@ function createBug(bug) {
     }));
   }
 
-  if (bug.assigned_to) {
+  if (bug.assigned_to && bug.assigned_to.name !== "nobody") {
     titleContainer.appendChild(createNode({
       tagName: "span",
       textContent: bug.assigned_to.name,
@@ -261,7 +261,7 @@ searchForP1s(function(bugs) {
   createBugs(bugs, el);
 });
 
-searchForTopP2s(function(bugs) {
+searchForTopBugs(function(bugs) {
   var el = document.querySelector(".top-bugs ul");
   createBugs(bugs, el);
 });
