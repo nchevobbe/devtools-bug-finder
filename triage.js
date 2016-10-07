@@ -176,35 +176,40 @@ function createBug(bug) {
 }
 
 function createBugs(bugs, el) {
-  el.classList.remove("loading");
+  let list = el.querySelector("ul");
+  let header = el.querySelector("h2");
+
+  list.classList.remove("loading");
 
   if (!bugs.length) {
-    el.appendChild(createBug({
+    list.appendChild(createBug({
       summary: "No bugs found"
     }));
+  } else {
+    header.textContent += ` (${bugs.length} bugs)`;
   }
 
   bugs.forEach(function(bug) {
-    el.appendChild(createBug(bug));
+    list.appendChild(createBug(bug));
   });
 }
 
 searchForUntriagedBugs(function(bugs) {
-  var el = document.querySelector(".untriaged ul");
+  var el = document.querySelector(".untriaged");
   createBugs(bugs, el);
 });
 
 searchForP1s(function(bugs) {
-  var el = document.querySelector(".P1s ul");
+  var el = document.querySelector(".P1s");
   createBugs(bugs, el);
 });
 
 searchForTopBugs(function(bugs) {
-  var el = document.querySelector(".top-bugs ul");
+  var el = document.querySelector(".top-bugs");
   createBugs(bugs, el);
 });
 
 searchForTopIntermittents(function(bugs) {
-  var el = document.querySelector(".intermittents ul");
+  var el = document.querySelector(".intermittents");
   createBugs(bugs, el);
 });
