@@ -34,10 +34,6 @@
     <h2>Untriaged bugs</h2>
     <ul class="bugs box loading"></ul>
   </div>
-  <div class="back-to-triage">
-    <h2>Bugs back to triage</h2>
-    <ul class="bugs box loading"></ul>
-  </div>
   <div class="P1s">
     <h2>P1s</h2>
     <ul class="bugs box loading"></ul>
@@ -79,12 +75,14 @@ function searchForUntriagedBugs(cb) {
     "product": "Firefox",
     "component": components,
     "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
-    "include_fields": ["id", "summary"],
+    "include_fields": ["id", "summary", "assigned_to"],
     "priority": ["--"]
   };
 
-  bugzilla.searchBugs(options, function(_, list) {
-    cb(list);
+  bugzilla.searchBugs(options, function(_, untriagedList) {
+    searchForBugsBackForReTriage(function(backForTriageList) {
+      cb(untriagedList.concat(backForTriageList));
+    });
   });
 }
 
@@ -115,7 +113,6 @@ function searchForP1s(cb) {
   bugzilla.searchBugs(options, function(_, list) {
     // Filter out devtools.html bugs and enhancements
     cb(list.filter(function(bug) {
-      console.log(bug)
       return !bug.whiteboard.includes("devtools-html") &&
              bug.severity !== "enhancement";
     }));
@@ -248,11 +245,6 @@ function createBugs(bugs, el) {
 
 searchForUntriagedBugs(function(bugs) {
   var el = document.querySelector(".untriaged ul");
-  createBugs(bugs, el);
-});
-
-searchForBugsBackForReTriage(function(bugs) {
-  var el = document.querySelector(".back-to-triage ul");
   createBugs(bugs, el);
 });
 
