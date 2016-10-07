@@ -1,6 +1,14 @@
 main {
+  /* Increase the margin on the right to allow the user to scroll the main container
+     since bug lists can also be scrollable */
+  margin-right: 5em;
   flex-direction: column;
   align-items: stretch;
+}
+
+.bugs.box {
+  max-height: 300px;
+  overflow: auto;
 }
 
 .bug .bug-link {
