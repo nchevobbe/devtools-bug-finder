@@ -1,0 +1,24 @@
+main {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.bug .bug-link {
+  margin: 0;
+}
+
+.bug .bug-link a {
+  font-weight: normal;
+}
+
+.bug .priority, .bug .assignee {
+  float: right;
+  margin: 0 .5em;
+  font-weight: bold;
+}
+
+.bug .tag.old-bug {
+  background-color: red;
+  border-color: #832d2d;
+  color: white;
+}
