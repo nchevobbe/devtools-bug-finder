@@ -13,11 +13,10 @@ ul, li {
 body {
   margin: 0;
   font-family: sans-serif;
-  font-size: 13px;
 }
 
-input {
-  font-size: 13px;
+body, input {
+  font-size: .8em;
 }
 
 body.dark {
@@ -145,12 +144,6 @@ header .links {
   float: right;
   display: inline;
   font-weight: normal;
-}
-
-@media (max-width: 650px) {
-  header .links {
-    display: none;
-  }
 }
 
 header .links li {
@@ -336,4 +329,45 @@ header .links li:first-child {
   display: inline-block;
   background-repeat: no-repeat;
   padding: .5em;
+}
+
+
+@media (max-width: 650px) {
+
+  header .links {
+    display: none;
+  }
+
+  .header, .footer {
+    background-color: #0c3757;
+    color: white;
+  }
+
+  main {
+    margin: 0;
+    flex-direction: column;
+  }
+
+  .sidebar, .main {
+    width: 100%;
+    margin: 0;
+    border-radius: 0px;
+  }
+
+  .box {
+    border: 0px;
+  }
+
+  .bugs {
+    border: 1px solid #E1E8ED;
+  }
+
+  .footer a {
+    text-decoration: none;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
