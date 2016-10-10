@@ -13,6 +13,28 @@ function hasFilter(name, filters) {
   return false;
 }
 
+function getParameterByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+  results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function parseTagsInUrl(url) {
+  if (!url) url = window.location.href;
+  var easy = getParameterByName("easy");
+  var mentored = getParameterByName("mentored");
+  if(easy === "false" || (mentored === "true" && easy === null)) {
+    document.getElementById("good-first").checked = false;
+  }
+  if(mentored === "true") {
+    document.getElementById("mentored").checked = true;
+  }
+}
+
 function getSearchParams(options) {
   options = options || {};
 
@@ -134,6 +156,7 @@ function getToolTooltip(id) {
 
 function createToolListMarkup(parentEl) {
   var keys = Object.keys(COMPONENT_MAPPING);
+  var categorieInUrl = getParameterByName("category");
   for (var i = 0; i < keys.length; i++) {
     var el = createNode({tagName: "li"});
 
@@ -146,6 +169,10 @@ function createToolListMarkup(parentEl) {
         id: keys[i]
       }
     });
+
+    if(categorieInUrl === keys[i]) {
+      input.checked = true;
+    }
 
     var label = createNode({
       tagName: "label",
@@ -487,6 +514,8 @@ function displayContributor(contributor, rootEl) {
 }
 
 function init() {
+  parseTagsInUrl();
+
   // Start by generating the list of filters for tools.
   createToolListMarkup(document.querySelector(".tools-list"));
 
