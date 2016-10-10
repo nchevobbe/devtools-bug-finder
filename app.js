@@ -14,7 +14,7 @@ function hasFilter(name, filters) {
 }
 
 function getParameterByName(name, url) {
-  if (!url) url = window.location.href;
+  if (!url) url = window.location.search;
   name = name.replace(/[\[\]]/g, "\\$&");
   var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
   results = regex.exec(url);
@@ -24,13 +24,13 @@ function getParameterByName(name, url) {
 }
 
 function parseTagsInUrl(url) {
-  if (!url) url = window.location.href;
+  if (!url) url = window.location.search;
   var easy = getParameterByName("easy");
   var mentored = getParameterByName("mentored");
-  if(easy === "false" || (mentored === "true" && easy === null)) {
+  if (easy === "false" || (mentored === "true" && easy === null)) {
     document.getElementById("good-first").checked = false;
   }
-  if(mentored === "true") {
+  if (mentored === "true") {
     document.getElementById("mentored").checked = true;
   }
 }
@@ -156,7 +156,7 @@ function getToolTooltip(id) {
 
 function createToolListMarkup(parentEl) {
   var keys = Object.keys(COMPONENT_MAPPING);
-  var categorieInUrl = getParameterByName("category");
+  var categoryInUrl = getParameterByName("category");
   for (var i = 0; i < keys.length; i++) {
     var el = createNode({tagName: "li"});
 
@@ -170,7 +170,7 @@ function createToolListMarkup(parentEl) {
       }
     });
 
-    if(categorieInUrl === keys[i]) {
+    if (categoryInUrl === keys[i]) {
       input.checked = true;
     }
 
