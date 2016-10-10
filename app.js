@@ -13,18 +13,18 @@ function hasFilter(name, filters) {
   return false;
 }
 
-function getParameterByName(name, url) {
-  if (!url) url = window.location.search;
+function getParameterByName(name) {
+  var urlParams = window.location.search;
   name = name.replace(/[\[\]]/g, "\\$&");
-  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-  results = regex.exec(url);
+
+  var results = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)").exec(urlParams);
+  
   if (!results) return null;
   if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function parseTagsInUrl(url) {
-  if (!url) url = window.location.search;
+function parseTagsInUrl() {
   var easy = getParameterByName("easy");
   var mentored = getParameterByName("mentored");
   if (easy === "false" || (mentored === "true" && easy === null)) {
