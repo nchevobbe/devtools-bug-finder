@@ -14,24 +14,36 @@ function hasFilter(name, filters) {
 }
 
 function getParameterByName(name) {
-  var urlParams = window.location.search;
-  name = name.replace(/[\[\]]/g, "\\$&");
+  var params = new URL(window.location).searchParams;
+  var value = params.get(name);
 
-  var results = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)").exec(urlParams);
-  
-  if (!results) return null;
-  if (!results[2]) return '';
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
+  if (value) {
+    return decodeURIComponent(value.replace(/\+/g, " "));
+  }
+
+  if (params.has(name)) {
+    return '';
+  }
+
+  return null;
 }
 
-function parseTagsInUrl() {
+function setFiltersFromUrlParams() {
   var easy = getParameterByName("easy");
   var mentored = getParameterByName("mentored");
-  if (easy === "false" || (mentored === "true" && easy === null)) {
-    document.getElementById("good-first").checked = false;
+
+  if (easy === '') {
+    document.getElementById("good-first").checked = true;
+    if (mentored === null) {
+      document.getElementById("mentored").checked = false;
+    }
   }
-  if (mentored === "true") {
+
+  if (mentored === '') {
     document.getElementById("mentored").checked = true;
+    if (easy === null) {
+      document.getElementById("good-first").checked = false;
+    }
   }
 }
 
@@ -46,13 +58,13 @@ function getSearchParams(options) {
     "bug_status": ["NEW", "REOPENED", "UNCONFIRMED"],
     // Include all these fields in the response.
     "include_fields": ["id",
-                       "assigned_to",
-                       "summary",
-                       "last_change_time",
-                       "component",
-                       "keywords",
-                       "mentors",
-                       "attachments"],
+    "assigned_to",
+    "summary",
+    "last_change_time",
+    "component",
+    "keywords",
+    "mentors",
+    "attachments"],
     // List of keywords to search for.
     "keywords": []
   };
@@ -156,7 +168,7 @@ function getToolTooltip(id) {
 
 function createToolListMarkup(parentEl) {
   var keys = Object.keys(COMPONENT_MAPPING);
-  var categoryInUrl = getParameterByName("category");
+  var toolInUrl = getParameterByName("tool");
   for (var i = 0; i < keys.length; i++) {
     var el = createNode({tagName: "li"});
 
@@ -170,7 +182,7 @@ function createToolListMarkup(parentEl) {
       }
     });
 
-    if (categoryInUrl === keys[i]) {
+    if (toolInUrl === keys[i]) {
       input.checked = true;
     }
 
@@ -287,8 +299,8 @@ function createBugMarkup(bug) {
         "title": "This bug is mentored, even if you have never contributed before, someone will help you"
       },
       textContent: bug.mentors ? "Mentor: " + bug.mentors_detail.map(function(m) {
-                     return m.real_name;
-                   })[0] : "",
+        return m.real_name;
+      })[0] : "",
     }));
   }
 
@@ -307,7 +319,7 @@ function createBugMarkup(bug) {
       attributes: {
         "class": "tag old-bug",
         "title": "This bug has been inactive for more than " +
-                 INACTIVE_AFTER + " days"
+        INACTIVE_AFTER + " days"
       },
       textContent: "Inactive"
     }));
@@ -330,7 +342,7 @@ function matchesSearchString(bug) {
   var query = searchString.toLowerCase();
 
   return bug.summary.toLowerCase().indexOf(query) !== -1 ||
-         (bug.id + "").indexOf(query) !== -1;
+  (bug.id + "").indexOf(query) !== -1;
 }
 
 function displayBugs(bugs) {
@@ -514,7 +526,7 @@ function displayContributor(contributor, rootEl) {
 }
 
 function init() {
-  parseTagsInUrl();
+  setFiltersFromUrlParams();
 
   // Start by generating the list of filters for tools.
   createToolListMarkup(document.querySelector(".tools-list"));
