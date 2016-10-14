@@ -58,13 +58,13 @@ function getSearchParams(options) {
     "bug_status": ["NEW", "REOPENED", "UNCONFIRMED"],
     // Include all these fields in the response.
     "include_fields": ["id",
-    "assigned_to",
-    "summary",
-    "last_change_time",
-    "component",
-    "keywords",
-    "mentors",
-    "attachments"],
+                       "assigned_to",
+                       "summary",
+                       "last_change_time",
+                       "component",
+                       "keywords",
+                       "mentors",
+                       "attachments"],
     // List of keywords to search for.
     "keywords": []
   };
@@ -319,7 +319,7 @@ function createBugMarkup(bug) {
       attributes: {
         "class": "tag old-bug",
         "title": "This bug has been inactive for more than " +
-        INACTIVE_AFTER + " days"
+                 INACTIVE_AFTER + " days"
       },
       textContent: "Inactive"
     }));
@@ -342,7 +342,7 @@ function matchesSearchString(bug) {
   var query = searchString.toLowerCase();
 
   return bug.summary.toLowerCase().indexOf(query) !== -1 ||
-  (bug.id + "").indexOf(query) !== -1;
+         (bug.id + "").indexOf(query) !== -1;
 }
 
 function displayBugs(bugs) {
