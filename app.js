@@ -22,7 +22,7 @@ function getParameterByName(name) {
   }
 
   if (params.has(name)) {
-    return '';
+    return "";
   }
 
   return null;
@@ -32,14 +32,14 @@ function setFiltersFromUrlParams() {
   var easy = getParameterByName("easy");
   var mentored = getParameterByName("mentored");
 
-  if (easy === '') {
+  if (easy === "") {
     document.getElementById("good-first").checked = true;
     if (mentored === null) {
       document.getElementById("mentored").checked = false;
     }
   }
 
-  if (mentored === '') {
+  if (mentored === "") {
     document.getElementById("mentored").checked = true;
     if (easy === null) {
       document.getElementById("good-first").checked = false;
