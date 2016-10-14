@@ -13,6 +13,40 @@ function hasFilter(name, filters) {
   return false;
 }
 
+function getParameterByName(name) {
+  var params = new URL(window.location).searchParams;
+  var value = params.get(name);
+
+  if (value) {
+    return decodeURIComponent(value.replace(/\+/g, " "));
+  }
+
+  if (params.has(name)) {
+    return "";
+  }
+
+  return null;
+}
+
+function setFiltersFromUrlParams() {
+  var easy = getParameterByName("easy");
+  var mentored = getParameterByName("mentored");
+
+  if (easy === "") {
+    document.getElementById("good-first").checked = true;
+    if (mentored === null) {
+      document.getElementById("mentored").checked = false;
+    }
+  }
+
+  if (mentored === "") {
+    document.getElementById("mentored").checked = true;
+    if (easy === null) {
+      document.getElementById("good-first").checked = false;
+    }
+  }
+}
+
 function getSearchParams(options) {
   options = options || {};
 
@@ -134,6 +168,7 @@ function getToolTooltip(id) {
 
 function createToolListMarkup(parentEl) {
   var keys = Object.keys(COMPONENT_MAPPING);
+  var toolInUrl = getParameterByName("tool");
   for (var i = 0; i < keys.length; i++) {
     var el = createNode({tagName: "li"});
 
@@ -146,6 +181,10 @@ function createToolListMarkup(parentEl) {
         id: keys[i]
       }
     });
+
+    if (toolInUrl === keys[i]) {
+      input.checked = true;
+    }
 
     var label = createNode({
       tagName: "label",
@@ -260,8 +299,8 @@ function createBugMarkup(bug) {
         "title": "This bug is mentored, even if you have never contributed before, someone will help you"
       },
       textContent: bug.mentors ? "Mentor: " + bug.mentors_detail.map(function(m) {
-                     return m.real_name;
-                   })[0] : "",
+        return m.real_name;
+      })[0] : "",
     }));
   }
 
@@ -487,6 +526,8 @@ function displayContributor(contributor, rootEl) {
 }
 
 function init() {
+  setFiltersFromUrlParams();
+
   // Start by generating the list of filters for tools.
   createToolListMarkup(document.querySelector(".tools-list"));
 
