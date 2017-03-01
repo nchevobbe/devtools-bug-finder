@@ -13,6 +13,48 @@ function hasFilter(name, filters) {
   return false;
 }
 
+function paramsToUrl(params) {
+  if (!params.toString()) {
+    return "";
+  }
+  return "?" + params.toString().replace(/=&/g, "&").replace(/=$/, "");
+}
+
+function setDefaultHistoryState() {
+  if (!location.search) {
+    return setQueryString({
+      "easy": true,
+      "tool": "all"
+    });
+  }
+
+  var params = new URLSearchParams(location.search.slice(1));
+  var state = Array.from(params).reduce(function(acc, item) {
+    acc[item[0]] = item[1];
+    return acc;
+  }, {});
+
+  history.replaceState(state, "", paramsToUrl(params));
+}
+
+function setQueryString(newState) {
+  var currentState = history.state || {};
+  var params = new URLSearchParams();
+  newState = Object.keys(newState).reduce(function(acc, key) {
+    if (!newState[key]) {
+      delete currentState[key];
+      return acc;
+    }
+    acc[key] = typeof newState[key] == "boolean" ? "" : newState[key];
+    return acc;
+  }, {});
+  currentState = Object.assign({}, currentState, newState);
+  Object.keys(currentState).forEach(function(key) {
+    params.append(key, currentState[key]);
+  });
+  history.replaceState(currentState, "", paramsToUrl(params));
+}
+
 function getParameterByName(name) {
   var params = new URL(window.location).searchParams;
   var value = params.get(name);
@@ -45,6 +87,12 @@ function setFiltersFromUrlParams() {
       document.getElementById("good-first").checked = false;
     }
   }
+}
+
+function setSearchFromUrlParams() {
+  var searchString = getParameterByName("search");
+  displayBugs(currentBugList);
+  document.querySelector(".search-input").value = searchString;
 }
 
 function getSearchParams(options) {
@@ -394,6 +442,11 @@ function search() {
 }
 
 function onInput(e) {
+  var key = e.target.name;
+  var value = e.target.type == "checkbox" ? e.target.checked : e.target.value;
+  if (key) {
+    setQueryString({ [key]: value });
+  }
   search();
 }
 
@@ -526,7 +579,9 @@ function displayContributor(contributor, rootEl) {
 }
 
 function init() {
+  setDefaultHistoryState();
   setFiltersFromUrlParams();
+  setSearchFromUrlParams();
 
   // Start by generating the list of filters for tools.
   createToolListMarkup(document.querySelector(".tools-list"));
@@ -549,6 +604,7 @@ function init() {
   // Listen to keypress in the search field to start searching.
   document.querySelector(".search-input").addEventListener("keyup", debounce(function() {
     searchString = this.value;
+    setQueryString({ "search": searchString });
     displayBugs(currentBugList);
   }, 100));
 
