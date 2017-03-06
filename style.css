@@ -1,7 +1,6 @@
 /* Resets and global styles */
 
 html, body {
-  background: #F5F8FA;
   height: 100%;
 }
 
@@ -14,15 +13,17 @@ ul, li {
 body {
   margin: 0;
   font-family: sans-serif;
-}
-
-body, input {
   font-size: .8em;
+  background: #F5F8FA;
 }
 
 body.dark {
-  background: #14171A;
+  background: #393F4C;
   color: #9DA1A5;
+}
+
+input {
+  font-size: inherit;
 }
 
 .box {
@@ -32,8 +33,8 @@ body.dark {
 }
 
 .dark .box {
-  background: #252C33;
-  border-color: black;
+  background: #272B35;
+  border-color: #454d5d;
 }
 
 .separated {
@@ -41,7 +42,7 @@ body.dark {
 }
 
 .dark .separated {
-  border-color: black;
+  border-color: #454d5d;
 }
 
 .separated:last-child {
@@ -53,7 +54,7 @@ a {
 }
 
 .dark a {
-  color: #D96629;
+  color: #00ff7f;
 }
 
 a:hover {
@@ -201,7 +202,7 @@ header .links li:first-child {
 }
 
 .dark .bug .bug-link a {
-  color: #D96629;
+  color: #00ff7f;
 }
 
 .bug .bug-link a:hover {
@@ -245,6 +246,10 @@ header .links li:first-child {
   overflow: hidden;
   cursor: help;
   color: #333;
+}
+
+.dark .bug .tag {
+  opacity: 0.65;
 }
 
 .bug .tag.mentor {
@@ -302,7 +307,14 @@ header .links li:first-child {
   box-sizing: border-box;
   padding: .5em;
   border: 1px solid #E1E8ED;
-  border-radius: 5px;
+  border-radius: 2px;
+  background: #fff;
+  color: inherit;
+}
+
+.dark .search-input {
+  background: #181D20;
+  border-color: #454d5d;
 }
 
 /* Top contributors */
