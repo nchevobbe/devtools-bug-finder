@@ -75,22 +75,29 @@ header {
 }
 
 main {
+  position: relative;
   margin: 2em;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
+  display: block;
+  padding-top: 30px;
+}
+
+.sidebar:last-child {
+  top: 55px;
+  right: 20px;
 }
 
 .sidebar {
+  position: fixed;
   width: 170px;
+  margin: 0px 0.2em;
   font-size: .9em;
   flex-shrink: 0;
 }
 
 .main {
-  margin: 0 2em;
-  flex-grow: 1;
+  margin: 0px auto;
+  box-sizing: border-box;
+  width: 68%;
 }
 
 .footer {
@@ -104,9 +111,12 @@ main {
 /* Header */
 
 header.box {
-  position: relative;
+  position: fixed;
+  width: 100%;
   border-radius: 0;
   border-width: 0 0 1px 0;
+  z-index: 1;
+  box-sizing: border-box;
 }
 
 header span {
@@ -358,12 +368,17 @@ header .links li:first-child {
 
   main {
     margin: 0;
+    display: flex;
+    padding-top: 40px;
     flex-direction: column;
   }
 
-  .sidebar, .main {
+  .sidebar, .sidebar:last-child, .main {
+    position: relative;
     width: 100%;
     margin: 0;
+    top: 0;
+    right: 0;
     border-radius: 0px;
   }
 
