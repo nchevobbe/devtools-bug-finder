@@ -95,9 +95,9 @@ main {
 }
 
 .main {
-  margin: 0px auto;
+  display: flex;
+  margin: 0px 190px;
   box-sizing: border-box;
-  width: 68%;
 }
 
 .footer {
