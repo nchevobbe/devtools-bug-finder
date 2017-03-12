@@ -77,17 +77,17 @@ header {
 main {
   position: relative;
   margin: 2em;
-  display: block;
-  padding-top: 30px;
+  display: flex;
+  align-items: flex-start;
 }
 
-.sidebar:last-child {
-  top: 55px;
-  right: 20px;
+.main ul {
+  width: 100%;
 }
 
 .sidebar {
-  position: fixed;
+  position: sticky;
+  top: 55px;
   width: 170px;
   margin: 0px 0.2em;
   font-size: .9em;
@@ -96,8 +96,10 @@ main {
 
 .main {
   display: flex;
-  margin: 0px 190px;
+  justify-content: center;
+  flex-grow: 1;
   box-sizing: border-box;
+  margin: 0 2em;
 }
 
 .footer {
@@ -111,8 +113,8 @@ main {
 /* Header */
 
 header.box {
-  position: fixed;
-  width: 100%;
+  position: sticky;
+  top: 0;
   border-radius: 0;
   border-width: 0 0 1px 0;
   z-index: 1;
@@ -369,11 +371,10 @@ header .links li:first-child {
   main {
     margin: 0;
     display: flex;
-    padding-top: 40px;
     flex-direction: column;
   }
 
-  .sidebar, .sidebar:last-child, .main {
+  .sidebar, .main {
     position: relative;
     width: 100%;
     margin: 0;
