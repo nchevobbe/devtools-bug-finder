@@ -555,7 +555,7 @@ function displayContributor(contributor, rootEl) {
     tagName: "a",
     attributes: {
       target: "_blank",
-      href: PROFILE_URL + contributor.name
+      href: PROFILE_URL + contributor.key + "@"
     },
     textContent: contributor.name
   });
