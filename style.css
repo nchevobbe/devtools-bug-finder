@@ -79,6 +79,7 @@ main {
   margin: 2em;
   display: flex;
   align-items: flex-start;
+  flex: 1;
 }
 
 .main ul {
