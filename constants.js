@@ -11,8 +11,8 @@ var STAFF = [
   "jaideepb", "rchien", "bkelly", "matt.woodrow", "fscholz", "efaustbmo", "ydelendik",
   "francesco.lodolo", "jyeh", "philipp", "schung", "evan", "lgreco", "gkrizsanits",
   "birtles", "myk", "pascalc", "mats", "gbrown", "mstriemer", "sole", "padenot",
-  "aryx.bugmail", "nchevobbe", "daisuke", "jwatt", "rhelmer", "mrbkap", "mstange",
-  "HoPang",
+  "aryx.bugmail", "nchevobbe", "dakatsuka", "jwatt", "rhelmer", "mrbkap", "mstange",
+  "bhsu", "ckerschb",
 ];
 
 // URL prefix to open a bug in bugzilla.
