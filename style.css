@@ -135,7 +135,7 @@ header::before {
   height: 100%;
   left: 2em;
   width: 32px;
-  background: url(logo.png) no-repeat center;
+  background: url(logo.svg) no-repeat center;
 }
 
 .loading header::before {
